@@ -1,8 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.fixed_pkg.all;
-
--- Tamaño de los datos: 32bits de coma fija, 22bits de entero y 10 decimales (precisión de ~0.001)
+use ieee.math_real.all;
 
 entity error_vector_computer is
     port (
@@ -28,11 +27,32 @@ entity error_vector_computer is
 end entity;
 
 architecture behaviour of error_vector_computer is
-    begin
---Cada vez que se recibe un flanco de subida de trigger:
- -- Se leen data_X y data_Y
- -- Con data_X se calcula A*x^4 + B*x^3 + C*x^2 + D*x + E
- -- Se calcula el error de data_Y con el polinomio anterior
- -- Se acumulan las siguientes cantidades en 5 buffers (las salidas p de la entidad)
-   -- p_k += data_X^k * error
+begin
+      
+  process(data_X, data_Y, A, B, C, D, E) 
+  
+  variable error: sfixed(21 downto -10);
+  variable prediction_X: sfixed(21 downto -10);
+	
+  begin	 
+    
+    acknowledge <= '0';
+	
+    if trigger = '1' then
+      
+      prediction_X := A*data_X**4 + B*data_X**3 + C*data_X**2 + D*data_X + E;
+      error := data_Y - prediction_X;
+    
+      p4 <= p4 + data_X**4 * error;
+      p3 <= p3 + data_X**3 * error;
+      p2 <= p2 + data_X**2 * error;
+      p1 <= p1 + data_X * error;
+      p0 <= p0 + error;
+
+      acknowledge <= '1';
+    
+  	end if;
+
+end process;
+
 end architecture behaviour;
