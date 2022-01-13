@@ -48,7 +48,7 @@ architecture behaviour of parameter_buffer is
     -- Cada vez que se activa "trigger" con un flanco de subida, actualizar cada salida con su delta  
     buffering: process(trigger)
     begin
-    
+    --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
         params(0) <= params(0) + deltas(0);
         params(1) <= params(1) + deltas(1);
         params(2) <= params(2) + deltas(2);
