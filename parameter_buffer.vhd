@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.fixed_pkg.all;
+library ieee_proposed;
+use ieee_proposed.fixed_pkg.all;
 -- Tamaño de los datos: 32bits de coma fija, 22bits de entero y 10 decimales (precisión de ~0.001)
 -- NOTE: NOT TESTED YET, FIXED_PKG REFERENCING ERRORS NEED TO BE SOLVED
 entity parameter_buffer is
